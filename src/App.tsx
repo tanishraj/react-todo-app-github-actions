@@ -1,8 +1,19 @@
-import { Box, Heading, Spacer, theme, Stack } from "@chakra-ui/react";
+import { Box, Spacer, Stack, Text, theme } from "@chakra-ui/react";
 
-import AddTask from "./components/AddTask";
+import AppHeader from "./components/AppHeader";
+import TaskModal from "./components/TaskModal";
 import DropDown from "./components/DropDown";
 import TodoList from "./components/TodoList";
+import AddTask from "./components/ActionButtons/AddTask";
+import useToggle from "./hooks/useToggle";
+import { useState } from "react";
+
+export type TodoItem = {
+  id: string;
+  title: string;
+  status: string;
+  createdAt: Date;
+};
 
 const dropDownOptions = [
   { optionName: "all", optionValue: "" },
@@ -10,7 +21,7 @@ const dropDownOptions = [
   { optionName: "pending", optionValue: "pending" },
 ];
 
-const todoList = [
+const todoListData: TodoItem[] = [
   {
     id: "1",
     title: "Task 1",
@@ -32,23 +43,34 @@ const todoList = [
 ];
 
 export const App = () => {
+  const [todoList, setTodoList] = useState(todoListData);
+  const [filterData, setFilterData] = useState<Array<TodoItem>>(todoList);
+  const { isOpen, onOpen, onClose, isEdit } = useToggle();
+
   const getSelectedOption = (option: React.RefObject<HTMLSelectElement>) => {
     console.log(option?.current?.value);
+    if (option?.current?.value !== "") {
+      let filter = todoList.filter(
+        (item, index) => item.status === option?.current?.value
+      );
+      setFilterData([...filter]);
+    } else {
+      setFilterData([...todoList]);
+    }
   };
 
   return (
     <Box margin="20px auto" maxWidth="xl">
       <Stack>
-        <Heading
+        <AppHeader
+          content="Todo App"
           size="2xl"
-          mb="4"
           textAlign="center"
-          color={theme.colors.gray[400]}
-        >
-          Todo List
-        </Heading>
+          color={theme.colors.gray[300]}
+        />
         <Stack direction="row" justifyContent="space-between">
-          <AddTask />
+          <AddTask onClick={onOpen} id="addTask" />
+          <TaskModal isOpen={isOpen} onClose={onClose} isEdit={isEdit} />
           <Spacer />
           <DropDown
             options={dropDownOptions}
@@ -56,7 +78,13 @@ export const App = () => {
           />
         </Stack>
         <Box my="2">
-          <TodoList todoList={todoList} />
+          <Stack spacing="4" background="gray.100" p="4">
+            {filterData?.length > 0 ? (
+              <TodoList todoList={filterData} onEdit={onOpen} />
+            ) : (
+              <Text textAlign="center">No Records</Text>
+            )}
+          </Stack>
         </Box>
       </Stack>
     </Box>

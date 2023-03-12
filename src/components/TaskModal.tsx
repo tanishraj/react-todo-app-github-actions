@@ -11,21 +11,24 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  useDisclosure,
 } from "@chakra-ui/react";
 
-const AddTask = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+interface TaskModalProps {
+  isEdit: boolean;
+  isOpen: boolean;
+  onClose: () => void;
+}
 
+const TaskModal = ({ isOpen, onClose, isEdit }: TaskModalProps) => {
   return (
     <>
-      <Button onClick={onOpen}>Add Task</Button>
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalBody>
-            <ModalHeader>Add Your Task</ModalHeader>
+            <ModalHeader>
+              {isEdit ? "Update Your Task" : "Add Your Task"}
+            </ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
               <FormControl>
@@ -45,7 +48,7 @@ const AddTask = () => {
 
             <ModalFooter>
               <Button colorScheme="blue" mr={3}>
-                Save
+                {isEdit ? "Update" : "Save"}
               </Button>
               <Button onClick={onClose}>Cancel</Button>
             </ModalFooter>
@@ -56,4 +59,4 @@ const AddTask = () => {
   );
 };
 
-export default AddTask;
+export default TaskModal;

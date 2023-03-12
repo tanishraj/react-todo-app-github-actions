@@ -9,7 +9,8 @@ import {
   Box,
   SlideFade,
 } from "@chakra-ui/react";
-import ActionButton from "./ActionButton";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import ActionIconButton from "./ActionButtons/ActionIconButton";
 
 type TodoItem = {
   id: string;
@@ -20,11 +21,12 @@ type TodoItem = {
 
 interface TodoItemProps {
   todoListItem: TodoItem;
+  onEdit: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-const TodoListItem = ({ todoListItem }: TodoItemProps) => {
+const TodoListItem = ({ todoListItem, onEdit }: TodoItemProps) => {
   return (
-    <SlideFade in={!!todoListItem} offsetY="20px" delay={0.5}>
+    <SlideFade in={!!todoListItem} offsetY="20px">
       <Card variant="outline" p="4" size="lg">
         <Stack justifyContent="space-between" direction="row">
           <Stack direction="row">
@@ -38,7 +40,24 @@ const TodoListItem = ({ todoListItem }: TodoItemProps) => {
               </CardBody>
             </Box>
           </Stack>
-          <ActionButton />
+          <Box>
+            <ActionIconButton
+              onClick={onEdit}
+              aria-label="Edit"
+              variant="outline"
+              size="md"
+              icon={<EditIcon id="editTask" />}
+              id="editTask"
+            />
+            <ActionIconButton
+              variant="outline"
+              aria-label="Delete"
+              size="md"
+              margin={2}
+              icon={<DeleteIcon id="deleteTask" />}
+              id="deleteTask"
+            />
+          </Box>
         </Stack>
       </Card>
     </SlideFade>
