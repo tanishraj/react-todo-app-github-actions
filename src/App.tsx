@@ -1,4 +1,4 @@
-import { Box, Spacer, Stack, Text, theme } from "@chakra-ui/react";
+import { Box, Stack, Text, theme } from "@chakra-ui/react";
 
 import AppHeader from "./components/AppHeader";
 import TaskModal from "./components/TaskModal";
@@ -67,25 +67,30 @@ export const App = () => {
           size="2xl"
           textAlign="center"
           color={theme.colors.gray[300]}
+          backgroundColor={theme.colors.gray[100]}
+          p={3}
         />
         <Stack direction="row" justifyContent="space-between">
           <AddTask onClick={onOpen} id="addTask" />
           <TaskModal isOpen={isOpen} onClose={onClose} isEdit={isEdit} />
-          <Spacer />
           <DropDown
             options={dropDownOptions}
             onOptionChange={getSelectedOption}
           />
         </Stack>
-        <Box my="2">
-          <Stack spacing="4" background="gray.100" p="4">
-            {filterData?.length > 0 ? (
-              <TodoList todoList={filterData} onEdit={onOpen} />
-            ) : (
-              <Text textAlign="center">No Records</Text>
-            )}
-          </Stack>
-        </Box>
+        <Stack
+          spacing="4"
+          background="gray.100"
+          borderRadius="lg"
+          p={4}
+          display="block"
+        >
+          {filterData?.length > 0 ? (
+            <TodoList todoList={filterData} onEdit={onOpen} />
+          ) : (
+            <Text textAlign="center">No Records</Text>
+          )}
+        </Stack>
       </Stack>
     </Box>
   );
